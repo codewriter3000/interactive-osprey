@@ -1,0 +1,109 @@
+.channel-guide {
+  --guide-teal: #b4ece9;
+  --guide-purple: #9099d0;
+  --guide-dark-purple: #292d53;
+  --guide-black: #0b1301;
+  --guide-gray: #515153;
+  --guide-bright-gray: #a3a69f;
+  background-color: white;
+  color: var(--guide-black);
+  font-size: 40px;
+  font-weight: 200;
+  height: 100vh;
+  width: 100vw;
+  font-family: 'Klavika', Tahoma, Geneva, Verdana, sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+.top-part {
+  display: flex;
+  flex-direction: row;
+  max-height: 50vh;
+}
+
+.program-details {
+  height: 50vh;
+  width: 50vw;
+  background-color: var(--guide-teal);
+  border-bottom: 3px solid var(--guide-black);
+  border-right: 3px solid var(--guide-black);
+  box-shadow: 0 2px 8px rgba(41, 45, 83, 0.15);
+}
+
+.channel {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 3px solid var(--guide-black);
+  box-shadow: 0 2px 8px rgba(41, 45, 83, 0.15);
+}
+
+.program {
+  padding-left: 25%;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.program-description {
+  /* font: var(--font-tnr);
+  font-weight: bold; */
+}
+
+.channel-logo {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.channel-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.channel-id {
+}
+
+.channel-number {
+  font: var(--font-tnr);
+  font-weight: bold;
+}
+
+.tv-streamer {
+  height: 50vh; /* Match program-details height */
+  width: 50vw;
+  border-bottom: 3px solid var(--guide-black);
+  box-shadow: 0 2px 8px rgba(41, 45, 83, 0.15);
+  overflow: hidden; /* Prevent scrolling */
+  display: flex;
+  flex-direction: column;
+}
+
+.television {
+  flex: 1; /* Take remaining space after status-bar */
+  min-height: 0; /* Allow flex item to shrink below content size */
+}
+
+.status-bar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 7.5%;
+  padding-right: 15%;
+  height: 50px;
+  background-color: var(--guide-bright-gray);
+  border-top: 3px solid var(--guide-black);
+  box-shadow: 0 -2px 8px rgba(41, 45, 83, 0.15);
+  flex-shrink: 0; /* Prevent status bar from shrinking */
+}

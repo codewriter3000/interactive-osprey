@@ -1,0 +1,45 @@
+:root {
+  --font-family: 'Nimbus Sans Condensed', Tahoma, Geneva, Verdana, sans-serif;
+  --black: #0b1301;
+  --orange: #a88e57;
+  --highlight-yellow: #e6d318;
+  --yellow: #9d9b35;
+  --teal: #63a3af;
+  --sky-blue: #8facc8;
+  --moderate-blue: #738eac;
+  --not-as-dark-blue: #5a7183;
+  --dark-blue: #43606e;
+  --purple: #846b95;
+  --bright-gray: #ccddcc; /*#a3a99c;*/
+  --gray: #5f655b;
+  --medium-gray: #575d50;
+  --dark-gray: #293124;
+  --font-klavika: 'Klavika', Tahoma, Geneva, Verdana, sans-serif;
+  --font-tnr: 'Times New Roman', serif;
+
+  font-family: var(--font-family);
+
+  background-color: var(--black);
+  color: var(--yellow);
+  user-select: none;
+  overflow: hidden;
+}
+
+@font-face {
+  font-family: 'Klavika';
+  src: url('./fonts/klavika/klavika-medium.otf') format('opentype');
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: 'Klavika';
+  src: url('./fonts/klavika/klavika-light.otf') format('opentype');
+  font-weight: 200;
+}
+
+@font-face {
+  font-family: 'Nimbus Sans Condensed';
+  src: url('./fonts/nimbus-sans-cond-l.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}

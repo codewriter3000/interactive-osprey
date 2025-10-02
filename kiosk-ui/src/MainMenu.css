@@ -1,0 +1,154 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  height: 200px;
+}
+
+.menu-heading {
+  flex: 2 1 0;
+  display: flex;
+  flex-direction: column;
+  height: 250px;
+}
+
+.bottom-third {
+  color: var(--orange);
+  font-size: 2rem;
+  font-weight: bold;
+  padding-left: 4em;
+  transform: translateY(-50%);
+}
+
+.bottom-third img {
+  margin-right: 1em;
+}
+
+.middle-third {
+  background-color: var(--medium-gray);
+  color: var(--orange);
+  font-size: 2rem;
+  font-weight: bold;
+  padding-left: 2em;
+}
+
+.top-third {
+  background-color: var(--gray);
+  height: 100px;
+}
+
+.channel-container {
+  flex: 1 1 33.33%;
+  max-width: 33.33%;
+  background-color: var(--dark-gray);
+}
+
+.upper-part {
+  background-color: var(--dark-gray);
+  height: 145px;
+}
+
+.lower-part {
+  height: 100%;
+  background-color: var(--black);
+}
+
+.time {
+  color: var(--bright-gray);
+  font-size: 2rem;
+  font-weight: bold;
+  float: right;
+  padding-right: 0.5rem;
+}
+
+.channel {
+  font-weight: bold;
+  font-size: 4rem;
+  text-align: center;
+  transform: translateY(-50%);
+}
+
+.main {
+  display: flex;
+  flex-direction: row;
+}
+
+.left-side {
+  flex: 1 1 25%;
+  background-color: var(--sky-blue);
+  height: 500px;
+  color: white;
+  font-size: 2rem;
+  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* .right-line {
+  background-color: var(--not-as-dark-blue);
+  position: absolute;
+  height: 200px;
+  width: 50px;
+  z-index: 0;
+  left: 34.5%;
+} */
+
+.menu-item {
+  z-index: 1;
+  background-color: var(--moderate-blue);
+  margin-top: 1px;
+  margin-bottom: 1px;
+  text-align: right;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  width: 100%;
+  height: 50px;
+}
+/* .menu-item:hover {
+  background-color: var(--highlight-yellow);
+  color: var(--black);
+  font-weight: bold;
+} */
+
+.menu-item .square {
+  margin-left: 0.5rem;
+  width: 50px;
+  height: 100%;
+  background-color: var(--dark-blue) !important;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.menu-item .square:hover {
+  /* background-color: var(--purple) !important; */
+}
+
+.television {
+  flex: 1 1 50%;
+  background-color: var(--black);
+  height: 500px;
+}
+
+.television img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.footer {
+  display: flex;
+  background-color: #3b6187;
+  width: 100%;
+  height: 100vh;
+}
+
+.footer img {
+  margin: auto;
+}
