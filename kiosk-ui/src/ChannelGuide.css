@@ -197,3 +197,10 @@
   color: white;
   overflow-x: hidden; /* Hide horizontal overflow */
 }
+
+.dark-date {
+  color: white;
+  font-family: var(--font-tnr);
+  font-weight: bold;
+  background-color: var(--guide-black);
+}

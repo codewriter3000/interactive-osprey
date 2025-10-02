@@ -1,7 +1,9 @@
+import NotAuthorized from './NotAuthorized';
+
 const TVStreamer = () => {
     return (
         <div class="television" style={{ width: '100%', height: '100%', overflow: 'hidden', background: 'black', display: 'flex', 'align-items': 'center', 'justify-content': 'center' }}>
-            <img
+            {/* <img
             src="./images/patrick.jpg"
             style={{
                 'max-width': '100%',
@@ -10,7 +12,8 @@ const TVStreamer = () => {
                 display: 'block',
                 margin: 'auto'
             }}
-            />
+            /> */}
+            <NotAuthorized />
         </div>
     );
 }

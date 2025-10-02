@@ -1,0 +1,27 @@
+dialog {
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    font-family: var(--font-tnr);
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    border: 1px solid white;
+    background-color: var(--guide-dark-purple);
+}
+
+.message {
+    font-size: 28px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--guide-purple);
+    border-left: 1px solid white;
+    border-right: 1px solid white;
+    border-bottom: 1px solid white;
+    min-height: 150px;
+    min-width: 450px;
+}
