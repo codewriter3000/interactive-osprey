@@ -1,5 +1,5 @@
 :root {
-  --font-family: 'Nimbus Sans Condensed', Tahoma, Geneva, Verdana, sans-serif;
+  --font-family: 'SARAFirmware', 'Nimbus Sans Condensed', Tahoma, Geneva, Verdana, sans-serif;
   --black: #0b1301;
   --orange: #a88e57;
   --highlight-yellow: #e6d318;
@@ -15,12 +15,11 @@
   --medium-gray: #575d50;
   --dark-gray: #293124;
   --font-klavika: 'Klavika', Tahoma, Geneva, Verdana, sans-serif;
-  --font-tnr: 'Times New Roman', serif;
+  --font-tnr: 'Arial Black', serif;
 
   font-family: var(--font-family);
 
   background-color: var(--black);
-  color: var(--yellow);
   user-select: none;
   overflow: hidden;
 }
@@ -40,6 +39,20 @@
 @font-face {
   font-family: 'Nimbus Sans Condensed';
   src: url('./fonts/nimbus-sans-cond-l.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Arial Black';
+  src: url('./fonts/arial_black.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SARAFirmware';
+  src: url('./fonts/SARAFirmware.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }

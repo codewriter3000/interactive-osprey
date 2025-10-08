@@ -55,7 +55,7 @@
 
 .program-description {
   /* font: var(--font-tnr);
-  font-weight: bold; */
+    */
 }
 
 .channel-logo {
@@ -79,7 +79,7 @@
 
 .channel-number {
   font: var(--font-tnr);
-  font-weight: bold;
+
 }
 
 .tv-streamer {
@@ -126,7 +126,7 @@
 
 .channel-header {
   font-family: var(--font-tnr);
-  font-weight: bold;
+
   display: flex;
   flex-direction: row;
   justify-content: end;
@@ -162,7 +162,7 @@
 .program-header {
   color: white;
   font-family: var(--font-tnr);
-  font-weight: bold;
+
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -176,11 +176,11 @@
 }
 
 .programs {
-  border-top: 1px solid white;
+  border-top: 1px solid var(--guide-purple);
   color: white;
 }
 
-.footer {
+.footer-channel-guide {
   display: flex;
   justify-content: space-between;
   padding-top: 10px;
@@ -201,6 +201,55 @@
 .dark-date {
   color: white;
   font-family: var(--font-tnr);
-  font-weight: bold;
+
   background-color: var(--guide-black);
+}
+
+.program-row {
+  display: flex;
+  flex-direction: row;
+  border-bottom: 1px solid white;
+  /* Remove flex-wrap and justify-content: space-between since we're using explicit widths */
+  border-bottom: 1px solid var(--guide-purple);
+  overflow-x: auto; /* Allow horizontal scrolling if content exceeds container */
+  min-height: 47px; /* Ensure consistent row height */
+  overflow-x: hidden;
+}
+
+.program-row > * {
+  /* Remove flex properties that interfere with explicit widths */
+  box-sizing: border-box;
+  /* Remove margin-right since we'll handle spacing differently */
+  overflow: hidden;
+  min-width: 10px; /* Minimum width for very short programs */
+  height: 47px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  border-right: 1px solid var(--guide-purple);
+  flex-shrink: 0; /* Prevent items from shrinking below their set width */
+}
+
+.selected-program-row {
+  background-color: var(--guide-teal);
+  color: var(--guide-black);
+}
+
+.schedule-block {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 2px 6px; /* Add some internal padding */
+  border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border */
+  margin-right: 2px; /* Small gap between blocks */
+  border-radius: 2px; /* Slight rounding for visual appeal */
+  transition: background-color 0.2s ease; /* Smooth hover effect */
+}
+
+.schedule-block span {
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
 }

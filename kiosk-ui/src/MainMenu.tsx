@@ -1,8 +1,10 @@
 import { createSignal, For } from "solid-js";
 import TVStreamer from "./TVStreamer.tsx";
+import { useScreenNavigation } from "./contexts/TVContext.tsx";
 import "./MainMenu.css";
 
 function MainMenu() {
+  const { goToChannelGuide, goToWatchingTV, goBack } = useScreenNavigation();
   const menuItems = [
     {
       id: 0,
@@ -46,6 +48,8 @@ function MainMenu() {
       setSelectedMenuItem((prev) => (prev - 1 + menuItems.length) % menuItems.length);
     } else if (e.key === "Enter") {
       clickButton(selectedMenuItem());
+    } else if (e.key === "Escape") {
+      setSelectedMenuItem(-1);
     }
   }
 
@@ -53,6 +57,23 @@ function MainMenu() {
     setIsBeingClicked(true);
     setTimeout(() => {
       setIsBeingClicked(false);
+
+      // Handle menu navigation
+      switch (index) {
+        case 0: // CHANNEL GUIDE
+          goToChannelGuide();
+          break;
+        case 1: // ON DEMAND
+        case 2: // ACTIVE RENTALS
+        case 3: // iO GAMES
+        case 4: // ENHANCED TV
+        case 5: // iO SHOWCASE
+          // These could navigate to different screens or show not implemented
+          console.log(`${menuItems[index].name} not implemented yet`);
+          break;
+        default:
+          break;
+      }
     }, 100);
   }
 
@@ -76,7 +97,7 @@ function MainMenu() {
 
           </div>
           <div class="lower-part">
-            <div class="channel">6 WPVI</div>
+            <div class="channel-main-menu">6 WPVI</div>
           </div>
         </div>
       </div>
@@ -107,7 +128,7 @@ function MainMenu() {
             )}
           </For>
         </div>
-        <TVStreamer />
+        <TVStreamer mainMenu />
       </div>
       <div class="footer">
         <img src="./images/geico ad.png" />

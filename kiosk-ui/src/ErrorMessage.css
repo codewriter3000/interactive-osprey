@@ -6,7 +6,7 @@ dialog {
 .header {
     font-family: var(--font-tnr);
     color: white;
-    font-weight: bold;
+
     text-align: center;
     border: 1px solid white;
     background-color: var(--guide-dark-purple);
