@@ -13,4 +13,24 @@ async function loadPlaylist(topEntryIndex) {
   return playlistObj.items;
 }
 
-export { loadPlaylist };
+function parseM3UEntry(entry) {
+  const [metaLine, url] = entry.split('\n').map(l => l.trim());
+  const attributesPart = metaLine.replace(/^#EXTINF:[^ ]+\s*/, '');
+  const [, title] = attributesPart.split(',', 2);
+
+  const attrRegex = /(\w+(?:-\w+)*)="([^"]*)"/g;
+  const attributes = {};
+  let match;
+  while ((match = attrRegex.exec(attributesPart)) !== null) {
+    attributes[match[1]] = match[2];
+  }
+
+  return {
+    duration: parseFloat(metaLine.match(/^#EXTINF:(\d+)/)?.[1] || 0),
+    title: title?.trim() || '',
+    url,
+    ...attributes
+  };
+}
+
+export { loadPlaylist, parseM3UEntry };

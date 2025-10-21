@@ -79,15 +79,19 @@
 }
 
 .left-side {
-  flex: 0 0 500px;
+  /* allow this column to take available space */
+  flex: auto;
+  align-self: stretch;
+  min-height: 0;
+
   background-color: var(--sky-blue);
-  height: 500px;
   color: white;
   font-size: 2rem;
 
   display: flex;
   flex-direction: column;
   justify-content: center;
+  height: auto;
 }
 
 /* .right-line {
@@ -135,6 +139,9 @@
   background-color: #3b6187;
   width: 100vw;
   position: static !important;
+  margin-top: auto;
+  flex-shrink: 0;
+  width: 100%;
 }
 
 .footer img {

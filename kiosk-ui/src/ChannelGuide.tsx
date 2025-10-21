@@ -7,12 +7,13 @@ import {
   createResource,
   createMemo,
 } from "solid-js";
-import { loadPlaylist } from "./lib/parser.js";
+import { loadPlaylist, parseM3UEntry } from "./lib/parser.js";
 import { getDayOfWeek, getMonth } from "./lib/time.js";
 import { getChannelName } from "./lib/channelName.js";
 import TVStreamer from "./TVStreamer.tsx";
 import { loadEPG, getNowNext, normId, normName, type EpgData } from "./lib/epg";
-import { useTVContext, useScreenNavigation } from "./contexts/TVContext.tsx";
+import { useTVContext, useScreenNavigation, type Channel } from "./contexts/TVContext.tsx";
+import Programs from "./Programs.tsx";
 
 import "./ChannelGuide.css";
 
@@ -62,9 +63,6 @@ export function ChannelGuide() {
   // const programmesForChannel = (cid: string) =>
   //   epg()?.programmesByChannel.get(cid.toLowerCase()) ?? [];
 
-  const programmesForChannel = (id: number) =>
-    [...Array.from(epg()?.programmesByChannel.values())][id] ?? [];
-
   const [entriesResource] = createResource(topEntryIndex, async (index) => {
     try {
       const items = await loadPlaylist(index);
@@ -111,9 +109,6 @@ export function ChannelGuide() {
           : topEntryIndex() === entries().length - 1
           ? 1
           : topEntryIndex() + 2;
-      console.log(programmesForChannel(
-                    currentIndex % entries().length
-                  ));
       setSelectedShowDescription(entries()[currentIndex]?.description ?? null);
     } else if (e.key === "Enter") {
       const currentIndex =
@@ -128,7 +123,7 @@ export function ChannelGuide() {
         // Update the TV context with the selected channel
         setCurrentChannel({
           name: selectedEntry.name ?? "Unknown Channel",
-          number: extractChannelNumber(selectedEntry.raw) ?? "0",
+          number: extractChannelNumber(selectedEntry.raw) ?? "-1",
           logo: selectedEntry.tvg?.logo,
           streamUrl: selectedEntry.url,
           raw: selectedEntry.raw,
@@ -280,6 +275,7 @@ export function ChannelGuide() {
         </div>
         <div class="program-list">
           <div class="program-header">
+
             <span>
               {(() => {
                 const timeStr = new Date()
@@ -323,83 +319,7 @@ export function ChannelGuide() {
               })()}
             </span>
           </div>
-          <div class="programs">
-            <Show when={!loading()} fallback={<div>Loading...</div>}>
-              <For
-                each={Array.from({ length: 5 }, (_, i) => topEntryIndex() + i)}
-              >
-                {(channelIdx) => {
-                  const entry = entries()[channelIdx % entries().length];
-                  const progs = programmesForChannel(
-                    channelIdx % entries().length
-                  ); // <-- this is an array
-                  return (
-                    <div
-                      class={`program-row ${
-                        channelIdx - topEntryIndex() === 2 &&
-                        "selected-program-row"
-                      }`}
-                    >
-                      <For each={progs}>
-                        {(p) => {
-                          const now = Date.now();
-                          const start =
-                            p.start instanceof Date
-                              ? p.start.getTime()
-                              : new Date(p.start).getTime();
-                          const end =
-                            p.stop instanceof Date
-                              ? p.stop.getTime()
-                              : new Date(p.stop).getTime();
-                          const showLength = (end - start) / (60 * 1000);
-                          // console.log(
-                          //   "start time:",
-                          //   new Date(start).toLocaleString()
-                          // );
-                          // console.log(
-                          //   "now time:",
-                          //   new Date(now).toLocaleString()
-                          // );
-                          // console.log(
-                          //   "time diff (min):",
-                          //   (now - start) / (60 * 1000)
-                          // );
-                          // console.log(
-                          //   "end time: ",
-                          //   new Date(end).toLocaleString()
-                          // );
-                          // console.log(
-                          //   "show length (min): ",
-                          //   Math.round((end - start) / (60 * 1000))
-                          // );
-                          // console.log("-------");
-                          if (end < now) return <></>;
-                          if (Math.abs((now - start) / (60 * 1000)) >= 120)
-                            return <></>;
-                          return (
-                            <div
-                              class="schedule-block"
-                              style={{
-                                width:
-                                  showLength >= 90
-                                    ? "100%"
-                                    : `${Math.max(
-                                        (showLength / 90) * 100,
-                                        10
-                                      )}%`, // minimum 10% width for visibility
-                              }}
-                            >
-                              <span>{p.title}</span>
-                            </div>
-                          );
-                        }}
-                      </For>
-                    </div>
-                  );
-                }}
-              </For>
-            </Show>
-          </div>
+          <Programs topEntryIndex={topEntryIndex} entries={entries} />
         </div>
       </div>
       <div class="footer-channel-guide">

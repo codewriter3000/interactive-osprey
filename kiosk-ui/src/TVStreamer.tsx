@@ -2,7 +2,7 @@ import { onCleanup, onMount, createEffect, createSignal, Show } from "solid-js";
 import Hls from "hls.js";
 import dashjs from "dashjs";
 import ErrorMessage from "./ErrorMessage";
-import { useChannelStream } from "./contexts/TVContext.tsx";
+import { useChannelStream, useTVContext } from "./contexts/TVContext.tsx";
 import "./TVStreamer.css";
 
 type Props = { src?: string | null, mainMenu?: boolean };
@@ -14,6 +14,11 @@ export default function TVStreamer(props: Props) {
   let dash: dashjs.MediaPlayerClass | null = null;
   let lastUrl: string | null = null;
   const [error, setError] = createSignal(false);
+
+  const {
+    currentChannel,
+    setCurrentChannel,
+  } = useTVContext();
 
   // Use prop src if provided, otherwise use context
   const streamUrl = () => props.src ?? channelStreamUrl();
@@ -64,7 +69,7 @@ export default function TVStreamer(props: Props) {
           enableWorker: true,
           lowLatencyMode: true,
           // no custom loader here
-          debug: true,
+          debug: false,
         });
 
         hls.on(Hls.Events.MEDIA_ATTACHED, () => {
@@ -87,9 +92,13 @@ export default function TVStreamer(props: Props) {
 
         hls.on(Hls.Events.ERROR, (_e, d) => {
           console.error("[HLS ERROR]", d.type, d.details, d);
+          if (d.type === Hls.ErrorTypes.OTHER_ERROR) hls!.recoverMediaError();
           if (d.fatal) {
             if (d.type === Hls.ErrorTypes.MEDIA_ERROR) hls!.recoverMediaError();
-            else hls!.destroy();
+            if (d.type === Hls.ErrorTypes.NETWORK_ERROR) hls!.recoverMediaError();
+
+            startPlayback(rawUrl);
+            // else hls!.destroy();
           }
           setTimeout(() => {
             setError(true);

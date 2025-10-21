@@ -58,6 +58,7 @@ export function TVProvider(props: { children: JSX.Element }) {
 
   // Update localStorage when stream URL changes
   const updateChannelStreamUrl = (url: string) => {
+    console.log("")
     setChannelStreamUrl(url);
     localStorage.setItem("channelStreamUrl", url);
 

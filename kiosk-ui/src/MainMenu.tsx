@@ -1,9 +1,13 @@
 import { createSignal, For } from "solid-js";
 import TVStreamer from "./TVStreamer.tsx";
-import { useScreenNavigation } from "./contexts/TVContext.tsx";
+import { useScreenNavigation, useTVContext } from "./contexts/TVContext.tsx";
 import "./MainMenu.css";
 
 function MainMenu() {
+  const {
+    currentChannel,
+  } = useTVContext();
+
   const { goToChannelGuide, goToWatchingTV, goBack } = useScreenNavigation();
   const menuItems = [
     {
@@ -85,7 +89,18 @@ function MainMenu() {
 
           </div>
           <div class="middle-third">
-            <div class="time">11:39 AM</div>
+            <div class="time">
+            {(() => {
+                const timeStr = new Date()
+                  .toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })
+                  .toLowerCase()
+                  .replace(" ", "");
+                return timeStr[0] === "0" ? timeStr.substring(1) : timeStr;
+              })()}
+            </div>
           </div>
           <div class="bottom-third">
             <img src="./images/optimum logo white.png" width="50" />
@@ -97,7 +112,12 @@ function MainMenu() {
 
           </div>
           <div class="lower-part">
-            <div class="channel-main-menu">6 WPVI</div>
+            <div class="channel-main-menu">
+              {(() => {
+                console.log("currentChannel():", currentChannel());
+                return currentChannel()?.number
+              })()}
+            </div>
           </div>
         </div>
       </div>
