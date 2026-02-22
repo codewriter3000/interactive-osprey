@@ -1,27 +1,25 @@
 import {
   createSignal,
-  onMount,
   For,
   Show,
   createEffect,
   createResource,
   createMemo,
 } from "solid-js";
-import { loadPlaylist, parseM3UEntry } from "./lib/parser.js";
-import { getDayOfWeek, getMonth } from "./lib/time.js";
+import { loadPlaylist } from "./lib/parser.js";
+import { getDayOfWeek } from "./lib/time.js";
 import { getChannelName } from "./lib/channelName.js";
-import TVStreamer from "./TVStreamer.tsx";
-import { loadEPG, getNowNext, normId, normName, type EpgData } from "./lib/epg";
-import { useTVContext, useScreenNavigation, type Channel } from "./contexts/TVContext.tsx";
+import { useTVContext, useScreenNavigation } from "./contexts/TVContext.tsx";
 import Programs from "./Programs.tsx";
+import { createLogger } from "./lib/logger";
 
 import "./ChannelGuide.css";
 
+const logger = createLogger("ChannelGuide");
+
 export function ChannelGuide() {
   const {
-    currentChannel,
     setCurrentChannel,
-    channelStreamUrl,
     setChannelStreamUrl
   } = useTVContext();
 
@@ -32,43 +30,19 @@ export function ChannelGuide() {
   const [channelName, setChannelName] = createSignal<string | null>(null);
   const [channelNumber, setChannelNumber] = createSignal<string | null>("10");
 
-  const [epg, setEpg] = createSignal<EpgData | null>(null);
-  const [loading, setLoading] = createSignal(true);
-  const [err, setErr] = createSignal<string | null>(null);
-
-  const [selectedShowName, setSelectedShowName] = createSignal<string | null>(
+  const [selectedShowName] = createSignal<string | null>(
     ""
   );
   const [selectedShowDescription, setSelectedShowDescription] = createSignal<
     string | null
   >("");
 
-  onMount(async () => {
-    try {
-      const epgUrl =
-        "/proxy?u=" + encodeURIComponent("http://localhost:8000/epg.xml");
-      const data = await loadEPG(epgUrl);
-      console.log("Loaded EPG data:", data);
-      setEpg(data);
-    } catch (e: any) {
-      setErr(e?.message ?? "Failed to load data");
-    }
-  });
-
-  createEffect(() => {
-    console.log("epg:", epg());
-    if (epg()) setLoading(false);
-  });
-
-  // const programmesForChannel = (cid: string) =>
-  //   epg()?.programmesByChannel.get(cid.toLowerCase()) ?? [];
-
   const [entriesResource] = createResource(topEntryIndex, async (index) => {
     try {
       const items = await loadPlaylist(index);
       return items;
     } catch (error) {
-      console.error("Failed to load playlist", error);
+      logger.error("Failed to load playlist", { error: String(error) });
       throw error;
     }
   });
@@ -177,7 +151,6 @@ export function ChannelGuide() {
         url: currentEntry?.url
       });
     } else {
-      //console.log('invalid entries error');
     }
   });
 
@@ -214,7 +187,7 @@ export function ChannelGuide() {
           </div>
         </div>
         <div class="tv-streamer">
-          <TVStreamer mainMenu src={channelStreamUrl()} />
+          <div class="shared-tv-window" />
           <div class="status-bar">
             <div class="channel-number">{channelNumber()}</div>
             <div class="date">

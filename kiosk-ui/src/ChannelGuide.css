@@ -5,7 +5,7 @@
   --guide-black: #0b1301;
   --guide-gray: #515153;
   --guide-bright-gray: #a3a69f;
-  background-color: white;
+  background-color: transparent;
   color: var(--guide-black);
   font-size: 40px;
   font-weight: 200;
@@ -14,6 +14,9 @@
   font-family: 'Klavika', Tahoma, Geneva, Verdana, sans-serif;
   display: flex;
   flex-direction: column;
+  position: fixed;
+  inset: 0;
+  z-index: 2;
 }
 
 .top-part {
@@ -90,6 +93,12 @@
   overflow: hidden; /* Prevent scrolling */
   display: flex;
   flex-direction: column;
+}
+
+.shared-tv-window {
+  flex: 1;
+  min-height: 0;
+  background: transparent;
 }
 
 .television {

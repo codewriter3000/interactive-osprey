@@ -1,6 +1,5 @@
 // src/lib/epg.ts
 import { XMLParser } from "fast-xml-parser";
-import dayjs from "dayjs";
 
 export type EpgProgramme = {
   channel: string; // xmltv channel id

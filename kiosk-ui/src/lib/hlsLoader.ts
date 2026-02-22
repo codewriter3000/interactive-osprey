@@ -1,7 +1,7 @@
 import Hls from "hls.js";
 
 export class ProxyLoader extends Hls.DefaultConfig.loader {
-  constructor(config) {
+  constructor(config: any) {
     super(config);
     // @ts-ignore
     this.load = (context, config, callbacks) => {

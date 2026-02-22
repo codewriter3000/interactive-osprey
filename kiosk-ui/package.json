@@ -9,10 +9,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "dashjs": "^5.1.1",
+    "dayjs": "^1.11.19",
+    "fast-xml-parser": "^5.3.7",
+    "hls.js": "^1.6.15",
     "iptv-playlist-parser": "^0.15.0",
-    "solid-js": "^1.9.9"
+    "solid-js": "^1.9.11"
   },
   "devDependencies": {
+    "@types/node": "^24.5.2",
     "typescript": "~5.8.3",
     "vite": "npm:rolldown-vite@7.1.12",
     "vite-plugin-solid": "^2.11.8"

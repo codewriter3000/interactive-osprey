@@ -1,4 +1,6 @@
-import { defineConfig, Plugin } from "vite";
+// @ts-nocheck
+import { defineConfig } from "vite";
+import type { Plugin } from "vite";
 import solid from "vite-plugin-solid";
 import http from "node:http";
 import https from "node:https";
@@ -89,6 +91,12 @@ function playlistProxy(): Plugin {
 export default defineConfig({
   server: { port: 5173 },
   plugins: [solid(), playlistProxy()],
+  optimizeDeps: {
+    esbuildOptions: {
+      jsx: "preserve",
+      jsxImportSource: "solid-js",
+    },
+  },
   build: {
     sourcemap: true,
   },

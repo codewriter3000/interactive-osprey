@@ -1,7 +1,6 @@
 import { onMount, onCleanup, Show } from "solid-js";
 import MainMenu from "./MainMenu.tsx";
 import {ChannelGuide} from "./ChannelGuide.tsx";
-import TVStreamer from "./TVStreamer.tsx";
 import { TVProvider, useScreenNavigation, useAppScreen } from "./contexts/TVContext.tsx";
 
 const AppContent = () => {
@@ -24,19 +23,15 @@ const AppContent = () => {
   });
 
   return (
-    <Show
-      when={currentScreen() === "mainMenu"}
-      fallback={
-        <Show
-          when={currentScreen() === "channelGuide"}
-          fallback={<TVStreamer />}
-        >
-          <ChannelGuide />
-        </Show>
-      }
-    >
-      <MainMenu />
-    </Show>
+    <>
+      <MainMenu
+        onMainMenu={currentScreen() === "mainMenu"}
+        inChannelGuide={currentScreen() === "channelGuide"}
+      />
+      <Show when={currentScreen() === "channelGuide"}>
+        <ChannelGuide />
+      </Show>
+    </>
   );
 };
 

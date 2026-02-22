@@ -1,8 +1,16 @@
 import { For, Show, createSignal, onMount, createEffect } from "solid-js";
-import { loadEPG, getNowNext, normId, normName, type EpgData } from "./lib/epg";
+import { loadEPG, type EpgData } from "./lib/epg";
 import { parseM3UEntry } from "./lib/parser.js";
+import { createLogger } from "./lib/logger";
 
-function Programs({ topEntryIndex, entries }) {
+type ProgramsProps = {
+  topEntryIndex: () => number;
+  entries: () => Array<{ raw: string }>;
+};
+
+const logger = createLogger("Programs");
+
+function Programs({ topEntryIndex, entries }: ProgramsProps) {
     const [epg, setEpg] = createSignal<EpgData | null>(null);
     const [loading, setLoading] = createSignal(true);
 
@@ -11,22 +19,22 @@ function Programs({ topEntryIndex, entries }) {
         const epgUrl =
             "/proxy?u=" + encodeURIComponent("http://localhost:8000/epg.xml");
         const data = await loadEPG(epgUrl);
-        console.log("Loaded EPG data:", data);
+        logger.info("Loaded EPG data", {
+          channelCount: data.programmesByChannel?.size ?? 0,
+        });
         setEpg(data);
         } catch (e: any) {
-            console.error(e?.message ?? "Failed to load data");
+            logger.error("Failed to load EPG data", {
+              error: e?.message ?? "Unknown error",
+            });
         }
-        console.log("top entry index: ", topEntryIndex());
     });
 
     createEffect(() => {
-        console.log("epg:", epg());
         if (epg()) setLoading(false);
     });
 
-    const programmesForChannel = (id: number, channelId: string = "null") => {
-      //console.log("channel id: ", channelId);
-      //console.log("epg: ", epg());
+    const programmesForChannel = (channelId: string = "null") => {
       const epgData = epg();
       if (!epgData?.programmesByChannel) return [];
 
@@ -44,21 +52,15 @@ function Programs({ topEntryIndex, entries }) {
               >
                 {(channelIdx) => {
                   const entry = parseM3UEntry(entries()[channelIdx % entries().length].raw);
-                  console.log("channel ID for entry:", entry["channel-id"]);
                   const progs = programmesForChannel(
-                    channelIdx % entries().length, entry["channel-id"]
+                    entry["channel-id"]
                   ); // <-- this is an array
-                  console.log("progs: ", progs);
-                  // console.log("channelIdx:", channelIdx);
-                  //console.log("progs:", progs);
                   return (
                     <div
                       class={`program-row ${channelIdx - topEntryIndex() === 2 && "selected-program-row"}`}
                     >
                       <For each={progs}>
                         {(p) => {
-                          console.log("p: ", JSON.stringify(p));
-                          const now = Date.now();
                           const start =
                             p.start instanceof Date
                               ? p.start.getTime()
@@ -69,30 +71,9 @@ function Programs({ topEntryIndex, entries }) {
                               : new Date(p.stop || 0).getTime();
                           const showLength = (end - start) / (60 * 1000);
 
-                          // Debug logging
-                          console.log("Program:", p.title);
-                          console.log("Now:", new Date(now).toISOString());
-                          console.log("Start:", new Date(start).toISOString());
-                          console.log("End:", new Date(end).toISOString());
-                          console.log("End < now:", end < now);
-                          console.log("Time diff from start (minutes):", (now - start) / (60 * 1000));
-                          console.log("---");
-
                           // Temporarily disable filtering to see all programs
                           // TODO: Re-enable these filters once we confirm programs are showing
 
-                          // Skip programs that have already ended
-                          // if (end < now) {
-                          //   console.log("Skipping - program ended");
-                          //   return <></>;
-                          // }
-
-                          // Show programs that are currently on or starting within 2 hours
-                          // const timeDiffFromStart = (now - start) / (60 * 1000);
-                          // if (timeDiffFromStart > 120) { // More than 2 hours after start
-                          //   console.log("Skipping - too far from start time");
-                          //   return <></>;
-                          // }                          console.log("Rendering program:", p.title);
                           return (
                             <div
                               class="schedule-block"

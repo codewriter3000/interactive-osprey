@@ -1,4 +1,7 @@
 import { createContext, useContext, createSignal, type JSX } from "solid-js";
+import { createLogger } from "../lib/logger";
+
+const logger = createLogger("TVContext");
 
 export interface Channel {
   name: string;
@@ -58,7 +61,7 @@ export function TVProvider(props: { children: JSX.Element }) {
 
   // Update localStorage when stream URL changes
   const updateChannelStreamUrl = (url: string) => {
-    console.log("")
+    logger.info("Updated channel stream URL", { hasUrl: Boolean(url) });
     setChannelStreamUrl(url);
     localStorage.setItem("channelStreamUrl", url);
 
