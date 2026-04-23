@@ -1,4 +1,4 @@
-import { createContext, useContext, createSignal, type JSX } from "solid-js";
+import { createContext, useContext, createSignal, createEffect, type JSX } from "solid-js";
 import { createLogger } from "../lib/logger";
 
 const logger = createLogger("TVContext");
@@ -58,6 +58,34 @@ export function TVProvider(props: { children: JSX.Element }) {
     localStorage.getItem("channelStreamUrl") ? "watchingTV" : "channelGuide"
   );
   const [previousScreen, setPreviousScreen] = createSignal<AppScreen | null>(null);
+
+  let lastScreen: AppScreen | undefined;
+  let lastChannelNumber: string | null | undefined;
+
+  createEffect(() => {
+    const nextScreen = currentScreen();
+    if (lastScreen && lastScreen !== nextScreen) {
+      logger.info("UI screen changed", { from: lastScreen, to: nextScreen });
+    } else if (!lastScreen) {
+      logger.info("UI initialized", { screen: nextScreen });
+    }
+    lastScreen = nextScreen;
+  });
+
+  createEffect(() => {
+    const channel = currentChannel();
+    const nextChannelNumber = channel?.number ?? null;
+
+    if (lastChannelNumber !== undefined && lastChannelNumber !== nextChannelNumber) {
+      logger.info("UI channel changed", {
+        from: lastChannelNumber,
+        to: nextChannelNumber,
+        name: channel?.name ?? null,
+      });
+    }
+
+    lastChannelNumber = nextChannelNumber;
+  });
 
   // Update localStorage when stream URL changes
   const updateChannelStreamUrl = (url: string) => {

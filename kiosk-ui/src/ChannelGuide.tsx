@@ -154,8 +154,40 @@ export function ChannelGuide() {
     }
   });
 
+  // Add debug logging for playlist and channel selection
+  createEffect(() => {
+    logger.info("ChannelGuide: entries loaded", { count: entries().length });
+    logger.info("ChannelGuide: currentChannel", { channel: currentChannel() });
+    logger.info("ChannelGuide: topEntryIndex", { index: topEntryIndex() });
+  });
+
+  let guideRef: HTMLDivElement | undefined;
+
+  createEffect(() => {
+    if (guideRef) {
+      guideRef.focus();
+    }
+  });
+
+  // Set initial topEntryIndex to match currentChannel
+  const { currentChannel } = useTVContext();
+  createEffect(() => {
+    const entriesData = entries();
+    if (!entriesData || entriesData.length === 0) return;
+    const currentNum = currentChannel()?.number;
+    if (currentNum) {
+      const idx = entriesData.findIndex(e => extractChannelNumber(e.raw) === currentNum);
+      if (idx >= 0) setTopEntryIndex(idx);
+    }
+  });
+
   return (
-    <div class="channel-guide" onKeyDown={handleKeyDown} tabindex="0">
+    <div
+      class="channel-guide"
+      onKeyDown={handleKeyDown}
+      tabindex="0"
+      ref={el => guideRef = el}
+    >
       <div class="top-part">
         <div class="program-details">
           <div class="channel">

@@ -1,5 +1,5 @@
-import { For, Show, createSignal, onMount, createEffect } from "solid-js";
-import { loadEPG, type EpgData } from "./lib/epg";
+import { For, Show, createSignal, onMount } from "solid-js";
+import { loadEPG, normId, normName, type EpgData } from "./lib/epg";
 import { parseM3UEntry } from "./lib/parser.js";
 import { createLogger } from "./lib/logger";
 
@@ -13,11 +13,11 @@ const logger = createLogger("Programs");
 function Programs({ topEntryIndex, entries }: ProgramsProps) {
     const [epg, setEpg] = createSignal<EpgData | null>(null);
     const [loading, setLoading] = createSignal(true);
+    const [loadFailed, setLoadFailed] = createSignal(false);
 
     onMount(async () => {
         try {
-        const epgUrl =
-            "/proxy?u=" + encodeURIComponent("http://localhost:8000/epg.xml");
+      const epgUrl = "http://127.0.0.1:8000/epg.xml";
         const data = await loadEPG(epgUrl);
         logger.info("Loaded EPG data", {
           channelCount: data.programmesByChannel?.size ?? 0,
@@ -27,33 +27,53 @@ function Programs({ topEntryIndex, entries }: ProgramsProps) {
             logger.error("Failed to load EPG data", {
               error: e?.message ?? "Unknown error",
             });
+            setLoadFailed(true);
+        } finally {
+          setLoading(false);
         }
     });
 
-    createEffect(() => {
-        if (epg()) setLoading(false);
-    });
-
-    const programmesForChannel = (channelId: string = "null") => {
+    const programmesForChannel = (channelId?: string | null, channelName?: string | null) => {
       const epgData = epg();
       if (!epgData?.programmesByChannel) return [];
 
-      const matchedChannels = [...Array.from(epgData.programmesByChannel.values())].filter(channel =>
-        channel && channel.length > 0 && channel[0]["channel"] === channelId
-      );
-      // Return the first matched channel's programs (flattened), or empty array
-      return matchedChannels.length > 0 ? matchedChannels[0] : [];
+      const id = normId(channelId);
+      if (id) {
+        const byId = epgData.programmesByChannel.get(id);
+        if (byId && byId.length > 0) return byId;
+      }
+
+      const wantedName = normName(channelName);
+      if (wantedName) {
+        for (const [epgChannelId, epgDisplayName] of epgData.channels.entries()) {
+          if (normName(epgDisplayName) === wantedName) {
+            const byName = epgData.programmesByChannel.get(epgChannelId);
+            if (byName && byName.length > 0) return byName;
+          }
+        }
+      }
+
+      return [];
     }
 
     return (<div class="programs">
             <Show when={!loading()} fallback={<div>Loading...</div>}>
+              <Show when={!loadFailed()} fallback={<div>No program data available.</div>}>
               <For
                 each={Array.from({ length: 5 }, (_, i) => topEntryIndex() + i)}
               >
                 {(channelIdx) => {
-                  const entry = parseM3UEntry(entries()[channelIdx % entries().length].raw);
+                  const item = entries()[channelIdx % entries().length] as any;
+                  const entry = item?.raw ? parseM3UEntry(item.raw) : {};
+                  const inferredChannelId =
+                    item?.tvg?.id ||
+                    item?.["tvg-id"] ||
+                    entry["channel-id"] ||
+                    entry["tvg-id"];
+                  const inferredChannelName = item?.name || entry?.title || null;
                   const progs = programmesForChannel(
-                    entry["channel-id"]
+                    inferredChannelId,
+                    inferredChannelName
                   ); // <-- this is an array
                   return (
                     <div
@@ -93,6 +113,7 @@ function Programs({ topEntryIndex, entries }: ProgramsProps) {
                   );
                 }}
               </For>
+              </Show>
             </Show>
           </div>
     );

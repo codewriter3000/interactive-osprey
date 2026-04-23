@@ -1,11 +1,32 @@
 import { parse } from "iptv-playlist-parser";
 
-async function loadPlaylist(topEntryIndex) {
-  const resp = await fetch('http://127.0.0.1:8000/playlist.m3u');
+let preferredPlaylistUrl = "http://127.0.0.1:8000/playlist.m3u8";
 
-  if (!resp.ok) {
-    throw new Error(`Failed to fetch playlist: ${resp.statusText}`);
+async function loadPlaylist(topEntryIndex) {
+  const candidates = [
+    preferredPlaylistUrl,
+    ...[
+      "http://127.0.0.1:8000/playlist.m3u8",
+      "http://127.0.0.1:8000/playlist.m3u",
+    ].filter((url) => url !== preferredPlaylistUrl),
+  ];
+
+  let resp;
+  let successfulUrl = "";
+  for (const url of candidates) {
+    const attempt = await fetch(url);
+    if (attempt.ok) {
+      resp = attempt;
+      successfulUrl = url;
+      break;
+    }
   }
+
+  if (!resp) {
+    throw new Error("Failed to fetch playlist.m3u or playlist.m3u8 from backend");
+  }
+
+  preferredPlaylistUrl = successfulUrl;
 
   const text = await resp.text();
   const playlistObj = parse(text);

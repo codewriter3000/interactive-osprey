@@ -135,6 +135,12 @@
 .main-menu-tv {
   flex: 1 1 50%;
   background-color: var(--black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
 }
 
 .television {
@@ -157,13 +163,12 @@
 }
 
 .main-menu-tv video {
-  margin-left: auto;
-  margin-right: 0;
   width: 100%;
+  max-width: 100%;
+  max-height: 100%;
   aspect-ratio: 16 / 9;
-  height: auto;
-  max-height: 100vh;
-  object-fit: cover;
+  object-fit: contain;
+  background: var(--black);
   display: block;
 }
 
@@ -185,6 +190,23 @@
   max-height: none;
   aspect-ratio: auto;
   object-fit: cover;
+}
+
+.channel-load-failed-message {
+  width: 100%;
+  height: 100%;
+  min-height: 360px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 1.5rem;
+  background: var(--black);
+}
+
+.channel-load-failed-message {
+  color: var(--bright-gray);
+  font-size: 2rem;
 }
 
 .left-side {
