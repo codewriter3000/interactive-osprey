@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+
+rm cache.json epg.xml playlist.m3u8
+
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

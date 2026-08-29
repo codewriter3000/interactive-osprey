@@ -290,7 +290,7 @@ function MainMenu(props: Props) {
           error={error}
           channelUnavailable={channelUnavailable}
           showUnmutePrompt={showUnmutePrompt}
-          videoEl={videoElRef.current}
+          videoEl={videoElRef}
           setVideoReady={setVideoReady}
           isMenuMode={isMenuMode}
           onUnmute={() => {

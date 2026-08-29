@@ -1,0 +1,4 @@
+__pycache__/
+log/**
+epg.xml
+playlist.m3u8
